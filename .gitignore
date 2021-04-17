@@ -1,2 +1,5 @@
 # Ignore binary
 DiscordMusicCollector
+
+# Ingore secrets
+config.yaml
