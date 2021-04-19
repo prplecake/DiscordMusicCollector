@@ -21,6 +21,5 @@ func Authenticate(clientID, secretKey string) spotify.Client {
 		log.Fatalf("couldn't get token: %v", err)
 	}
 
-	client := spotify.Authenticator{}.NewClient(token)
-	return client
+	return spotify.Authenticator{}.NewClient(token)
 }
