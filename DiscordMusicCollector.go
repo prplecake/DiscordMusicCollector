@@ -12,6 +12,8 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"gopkg.in/yaml.v2"
+
+	"git.sr.ht/~mjorgensen/DiscordMusicCollector/spotify"
 )
 
 // Global variables
