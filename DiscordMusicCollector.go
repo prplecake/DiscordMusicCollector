@@ -78,7 +78,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// If the message is "ping" reply with "Pong!"
 	if strings.Contains(m.Content, "youtube.com") {
 		fmt.Println("got youtube link")
-		links := extractYtLinks(m.Content)
+		links := extractYoutubeLinks(m.Content)
 		fmt.Println(links)
 	}
 	if strings.Contains(m.Content, "spotify.com") {
@@ -93,7 +93,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 }
 
-func extractYtLinks(message string) []string {
+func extractYoutubeLinks(message string) []string {
 	re := regexp.MustCompile(`(?:https?:)?(?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube(?:\-nocookie)?\.(?:[A-Za-z]{2,4}|[A-Za-z]{2,3}\.[A-Za-z]{2})\/)(?:watch|embed\/|vi?\/)*(?:\?[\w=&]*vi?=)?([^#&\?\/]{11}).*`)
 	return re.FindAllString(message, -1)
 }
