@@ -14,7 +14,6 @@ import (
 	"gopkg.in/yaml.v2"
 	"github.com/zmb3/spotify"
 
-	"git.sr.ht/~mjorgensen/DiscordMusicCollector/DCM"
 	"git.sr.ht/~mjorgensen/DiscordMusicCollector/services"
 )
 
@@ -38,7 +37,7 @@ func init() {
 	}
 	log.Print(Config)
 
-	spc = services.AuthenticateSpotify(Config.Spotify.ClientID, Config.Spotify.ClientSecret)
+	services.AuthenticateSpotify(Config.Spotify.ClientID, Config.Spotify.ClientSecret)
 }
 
 func main() {
@@ -83,7 +82,6 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	var (
 		service string
-		spotifyTrackId spotify.ID
 	)
 
 	// If the message is "ping" reply with "Pong!"
@@ -94,39 +92,24 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 	if strings.Contains(m.Content, "spotify.com") {
 		service = "spotify"
-		spotifyTrackId = spotify.ID(extractSpotifyTrackId(m.Content))
+		for _, url := range strings.Fields(m.Content) {
+			services.HandleSpotifyResult(spotify.ID(extractSpotifyTrackId(url)))
+		}
 	}
 	if strings.Contains(m.Content, "music.apple.com") {
 		service ="applemusic"
 		links := extractAppleMusicLinks(m.Content)
 		fmt.Println(links)
 	}
-	log.Print(service)
+
 	if service == "applemusic" {
 		// handle Apple Music results
 	} else if service == "spotify" {
-		log.Print("Handling Spotify result...")
-
-		result, err := spc.GetTrack(spotifyTrackId)
-		if err != nil {
-			log.Print("error getting spotify track data: ", err)
-		}
-		artists := []string{}
-		for _, artist := range result.SimpleTrack.Artists {
-			artists = append(artists, artist.Name)
-		}
-		track := DCM.Track{
-			Name: result.SimpleTrack.Name,
-			Artists: artists,
-			Album: result.Album.Name,
-		}
-		log.Print(track)
+		
 	} else if service == "youtube" {
 		// handle Youtube links
 	} else if service == "" {
 		log.Print("Service not set")
-	} else {
-		log.Print("Service not understood")
 	}
 }
 
@@ -135,9 +118,9 @@ func extractYoutubeLinks(message string) []string {
 	return re.FindAllString(message, -1)
 }
 
-func extractSpotifyTrackId(message string) string {
-	re := regexp.MustCompile(`https:\/\/open.spotify.com\/track\/(?P<trackId>[a-zA-Z0-9]+)\?si=(?P<si>[a-zA-z0-9]+)`)
-	result := getParams(re, message)
+func extractSpotifyTrackId(url string) string {
+	re := regexp.MustCompile(`https:\/\/open.spotify.com\/track\/(?P<trackId>[a-zA-Z0-9]+)\?si=(?P<si>[a-zA-z0-9\-]+)`)
+	result := getParams(re, url)
 	return result["trackId"]
 }
 
