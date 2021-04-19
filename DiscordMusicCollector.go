@@ -6,13 +6,12 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"regexp"
 	"strings"
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
-	"gopkg.in/yaml.v2"
 	"github.com/zmb3/spotify"
+	"gopkg.in/yaml.v2"
 
 	"git.sr.ht/~mjorgensen/DiscordMusicCollector/services"
 )
@@ -21,7 +20,7 @@ import (
 var (
 	Token  string
 	Config Configuration
-	spc spotify.Client
+	spc    spotify.Client
 )
 
 func init() {
@@ -82,43 +81,25 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	for _, field := range strings.Fields(m.Content) {
 		if strings.Contains(field, "music.apple.com") {
-			services.HandleAppleMusicResult(extractAppleMusicTrackId(field))
+			err := services.HandleAppleMusicURL(field)
+			if err != nil {
+				log.Print("services.HandleAppleMusicURL() error: ", err)
+			}
 		}
 		if strings.Contains(field, "spotify.com") {
-			services.HandleSpotifyResult(spotify.ID(extractSpotifyTrackId(field)))
+			err := services.HandleSpotifyURL(field)
+			if err != nil {
+				log.Print("services.HandleSpotifyURL() error: ", err)
+			}
 		}
 		if strings.Contains(field, "youtube.com") {
-			services.HandleYoutubeResult(extractYoutubeLinks(field))
+			err := services.HandleYoutubeURL(field)
+			if err != nil {
+				log.Print("services.HandleYoutubeURL() error: ", err)
+			}
 		}
 	}
-}
 
-func extractYoutubeLinks(message string) []string {
-	re := regexp.MustCompile(`(?:https?:)?(?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube(?:\-nocookie)?\.(?:[A-Za-z]{2,4}|[A-Za-z]{2,3}\.[A-Za-z]{2})\/)(?:watch|embed\/|vi?\/)*(?:\?[\w=&]*vi?=)?([^#&\?\/]{11}).*`)
-	return re.FindAllString(message, -1)
-}
-
-func extractSpotifyTrackId(url string) string {
-	re := regexp.MustCompile(`https:\/\/open.spotify.com\/track\/(?P<trackId>[a-zA-Z0-9]+)\?si=(?P<si>[a-zA-z0-9\-]+)`)
-	result := getParams(re, url)
-	return result["trackId"]
-}
-
-func extractAppleMusicTrackId(message string) []string {
-	re := regexp.MustCompile(`(https:\/\/music.apple.com\/us\/album\/([a-zA-Z0-9\-]+)\/([0-9]+)\?i=+([0-9]+))`)
-	return re.FindAllString(message, -1)
-}
-
-func getParams(regex *regexp.Regexp, message string) (paramsMap map[string]string) {
-	match := regex.FindStringSubmatch(message)
-
-	paramsMap = make(map[string]string)
-	for i, name := range regex.SubexpNames() {
-		if i > 0 && i <= len(match) {
-			paramsMap[name] = match[i]
-		}
-	}
-	return paramsMap
 }
 
 func addLinkToDB(link string, service string) {}

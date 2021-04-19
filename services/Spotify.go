@@ -3,20 +3,24 @@ package services
 import (
 	"context"
 	"log"
+	"regexp"
 
 	"golang.org/x/oauth2/clientcredentials"
 
 	"github.com/zmb3/spotify"
 
-	"git.sr.ht/~mjorgensen/DiscordMusicCollector/DCM"
+	"git.sr.ht/~mjorgensen/DiscordMusicCollector/dcm"
+)
 
+const (
+	spotifyURLRegex = `https:\/\/open.spotify.com\/track\/(?P<trackId>[a-zA-Z0-9]+)\?si=(?P<si>[a-zA-z0-9\-]+)`
 )
 
 var (
-	Client spotify.Client
+	client spotify.Client
 )
 
-// Authenticate provides a wrapper for the zmb3/spotify library
+// AuthenticateSpotify provides a wrapper for the zmb3/spotify library
 func AuthenticateSpotify(clientID, secretKey string) {
 	config := &clientcredentials.Config{
 		ClientID:     clientID,
@@ -28,24 +32,32 @@ func AuthenticateSpotify(clientID, secretKey string) {
 		log.Fatalf("couldn't get token: %v", err)
 	}
 
-	Client = spotify.Authenticator{}.NewClient(token)
+	client = spotify.Authenticator{}.NewClient(token)
 }
 
-func HandleSpotifyResult(result spotify.ID) error {
-	log.Print("Handling Spotify result...")
+func extractSpotifyTrackID(url string) spotify.ID {
+	re := regexp.MustCompile(spotifyURLRegex)
+	result := dcm.GetParams(re, url)
+	return spotify.ID(result["trackId"])
+}
 
-	sr, err := Client.GetTrack(result)
+// HandleSpotifyURL uses the Spotify API to gather information on a
+// track.
+func HandleSpotifyURL(url string) error {
+	log.Print("Handling Spotify URL...")
+
+	sr, err := client.GetTrack(extractSpotifyTrackID(url))
 	if err != nil {
-		log.Print("error getting spotify track data: ", err)
+		return err
 	}
 	artists := []string{}
 	for _, artist := range sr.SimpleTrack.Artists {
 		artists = append(artists, artist.Name)
 	}
-	track := DCM.Track{
-		Name: sr.SimpleTrack.Name,
+	track := dcm.Track{
+		Name:    sr.SimpleTrack.Name,
 		Artists: artists,
-		Album: sr.Album.Name,
+		Album:   sr.Album.Name,
 	}
 	log.Print(track)
 	return nil

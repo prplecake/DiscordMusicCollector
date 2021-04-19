@@ -1,6 +1,6 @@
-package DCM
+package dcm
 
 type Track struct {
 	Name, Album string
-	Artists []string
+	Artists     []string
 }
