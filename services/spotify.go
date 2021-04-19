@@ -1,4 +1,4 @@
-package spotify
+package services
 
 import (
 	"context"
@@ -9,8 +9,12 @@ import (
 	"github.com/zmb3/spotify"
 )
 
+var (
+	Client spotify.Client
+)
+
 // Authenticate provides a wrapper for the zmb3/spotify library
-func Authenticate(clientID, secretKey string) spotify.Client {
+func AuthenticateSpotify(clientID, secretKey string) spotify.Client {
 	config := &clientcredentials.Config{
 		ClientID:     clientID,
 		ClientSecret: secretKey,

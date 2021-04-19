@@ -12,14 +12,17 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"gopkg.in/yaml.v2"
+	"github.com/zmb3/spotify"
 
-	"git.sr.ht/~mjorgensen/DiscordMusicCollector/spotify"
+	"git.sr.ht/~mjorgensen/DiscordMusicCollector/DCM"
+	"git.sr.ht/~mjorgensen/DiscordMusicCollector/services"
 )
 
 // Global variables
 var (
 	Token  string
 	Config Configuration
+	spc spotify.Client
 )
 
 func init() {
@@ -35,7 +38,7 @@ func init() {
 	}
 	log.Print(Config)
 
-	spotify.Authenticate(Config.Spotify.ClientID, Config.Spotify.ClientSecret)
+	spc = services.AuthenticateSpotify(Config.Spotify.ClientID, Config.Spotify.ClientSecret)
 }
 
 func main() {
@@ -77,21 +80,53 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
+
+	var (
+		service string
+		spotifyTrackId spotify.ID
+	)
+
 	// If the message is "ping" reply with "Pong!"
 	if strings.Contains(m.Content, "youtube.com") {
-		fmt.Println("got youtube link")
+		service = "youtube"
 		links := extractYoutubeLinks(m.Content)
 		fmt.Println(links)
 	}
 	if strings.Contains(m.Content, "spotify.com") {
-		fmt.Println("got spotify link")
-		links := extractSpotifyLinks(m.Content)
-		fmt.Println(links)
+		service = "spotify"
+		spotifyTrackId = spotify.ID(extractSpotifyTrackId(m.Content))
 	}
 	if strings.Contains(m.Content, "music.apple.com") {
-		fmt.Println("got apple music link")
+		service ="applemusic"
 		links := extractAppleMusicLinks(m.Content)
 		fmt.Println(links)
+	}
+	log.Print(service)
+	if service == "applemusic" {
+		// handle Apple Music results
+	} else if service == "spotify" {
+		log.Print("Handling Spotify result...")
+
+		result, err := spc.GetTrack(spotifyTrackId)
+		if err != nil {
+			log.Print("error getting spotify track data: ", err)
+		}
+		artists := []string{}
+		for _, artist := range result.SimpleTrack.Artists {
+			artists = append(artists, artist.Name)
+		}
+		track := DCM.Track{
+			Name: result.SimpleTrack.Name,
+			Artists: artists,
+			Album: result.Album.Name,
+		}
+		log.Print(track)
+	} else if service == "youtube" {
+		// handle Youtube links
+	} else if service == "" {
+		log.Print("Service not set")
+	} else {
+		log.Print("Service not understood")
 	}
 }
 
@@ -100,14 +135,27 @@ func extractYoutubeLinks(message string) []string {
 	return re.FindAllString(message, -1)
 }
 
-func extractSpotifyLinks(message string) [][]string {
-	re := regexp.MustCompile(`(https:\/\/open.spotify.com\/track\/([a-zA-Z0-9]+)\?si=([a-zA-z0-9]+))`)
-	return re.FindAllStringSubmatch(message, -1)
+func extractSpotifyTrackId(message string) string {
+	re := regexp.MustCompile(`https:\/\/open.spotify.com\/track\/(?P<trackId>[a-zA-Z0-9]+)\?si=(?P<si>[a-zA-z0-9]+)`)
+	result := getParams(re, message)
+	return result["trackId"]
 }
 
 func extractAppleMusicLinks(message string) []string {
 	re := regexp.MustCompile(`(https:\/\/music.apple.com\/us\/album\/([a-zA-Z0-9\-]+)\/([0-9]+)\?i=+([0-9]+))`)
 	return re.FindAllString(message, -1)
+}
+
+func getParams(regex *regexp.Regexp, message string) (paramsMap map[string]string) {
+	match := regex.FindStringSubmatch(message)
+
+	paramsMap = make(map[string]string)
+	for i, name := range regex.SubexpNames() {
+		if i > 0 && i <= len(match) {
+			paramsMap[name] = match[i]
+		}
+	}
+	return paramsMap
 }
 
 func addLinkToDB(link string, service string) {}
