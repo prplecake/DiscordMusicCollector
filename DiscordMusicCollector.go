@@ -98,9 +98,9 @@ func extractYoutubeLinks(message string) []string {
 	return re.FindAllString(message, -1)
 }
 
-func extractSpotifyLinks(message string) []string {
-	re := regexp.MustCompile(`(https:\/\/open.spotify.com\/track\/([a-zA-Z0-9]+)|spotify:user:([a-zA-Z0-9]+):playlist:)([a-zA-Z0-9]+)\?si=([a-zA-z0-9]+)`)
-	return re.FindAllString(message, -1)
+func extractSpotifyLinks(message string) [][]string {
+	re := regexp.MustCompile(`(https:\/\/open.spotify.com\/track\/([a-zA-Z0-9]+)\?si=([a-zA-z0-9]+))`)
+	return re.FindAllStringSubmatch(message, -1)
 }
 
 func extractAppleMusicLinks(message string) []string {
