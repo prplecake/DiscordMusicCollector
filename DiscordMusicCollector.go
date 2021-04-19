@@ -1,8 +1,9 @@
 package main
 
 import (
-	"flag"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 	"os/signal"
 	"regexp"
@@ -10,21 +11,34 @@ import (
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
+	"gopkg.in/yaml.v2"
 )
 
-// Variables used for command line parameters
+// Global variables
 var (
-	Token string
+	Token  string
+	Config Configuration
 )
 
 func init() {
-	flag.StringVar(&Token, "t", "", "Bot token")
-	flag.Parse()
+	log.Print("Initializing...")
+	configFile := "config.yaml"
+	cf, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		log.Panic(err)
+	}
+	err = yaml.Unmarshal(cf, &Config)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Print(Config)
+
+	spotify.Authenticate(Config.Spotify.ClientID, Config.Spotify.ClientSecret)
 }
 
 func main() {
 	// Create a new Discord session using the provided bot token.
-	dg, err := discordgo.New("Bot " + Token)
+	dg, err := discordgo.New("Bot " + Config.Discord.Token)
 	if err != nil {
 		fmt.Println("error creating Discord session,", err)
 		return
