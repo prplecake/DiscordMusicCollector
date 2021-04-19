@@ -59,6 +59,7 @@ func HandleSpotifyURL(url string) error {
 		Artists: artists,
 		Album:   sr.Album.Name,
 	}
-	log.Print(track)
+	log.Printf("Got track:\n\tTitle:\t\t%s\n\tArtist(s):\t%s\n\tAlbum:\t\t%s",
+		track.Name, track.Artists, track.Album)
 	return nil
 }
