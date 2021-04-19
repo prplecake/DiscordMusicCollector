@@ -80,36 +80,16 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	var (
-		service string
-	)
-
-	// If the message is "ping" reply with "Pong!"
-	if strings.Contains(m.Content, "youtube.com") {
-		service = "youtube"
-		links := extractYoutubeLinks(m.Content)
-		fmt.Println(links)
-	}
-	if strings.Contains(m.Content, "spotify.com") {
-		service = "spotify"
-		for _, url := range strings.Fields(m.Content) {
-			services.HandleSpotifyResult(spotify.ID(extractSpotifyTrackId(url)))
+	for _, field := range strings.Fields(m.Content) {
+		if strings.Contains(field, "music.apple.com") {
+			services.HandleAppleMusicResult(extractAppleMusicTrackId(field))
 		}
-	}
-	if strings.Contains(m.Content, "music.apple.com") {
-		service ="applemusic"
-		links := extractAppleMusicLinks(m.Content)
-		fmt.Println(links)
-	}
-
-	if service == "applemusic" {
-		// handle Apple Music results
-	} else if service == "spotify" {
-		
-	} else if service == "youtube" {
-		// handle Youtube links
-	} else if service == "" {
-		log.Print("Service not set")
+		if strings.Contains(field, "spotify.com") {
+			services.HandleSpotifyResult(spotify.ID(extractSpotifyTrackId(field)))
+		}
+		if strings.Contains(field, "youtube.com") {
+			services.HandleYoutubeResult(extractYoutubeLinks(field))
+		}
 	}
 }
 
@@ -124,7 +104,7 @@ func extractSpotifyTrackId(url string) string {
 	return result["trackId"]
 }
 
-func extractAppleMusicLinks(message string) []string {
+func extractAppleMusicTrackId(message string) []string {
 	re := regexp.MustCompile(`(https:\/\/music.apple.com\/us\/album\/([a-zA-Z0-9\-]+)\/([0-9]+)\?i=+([0-9]+))`)
 	return re.FindAllString(message, -1)
 }
