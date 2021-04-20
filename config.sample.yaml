@@ -3,3 +3,5 @@ discord:
 spotify:
   clientid: SPOTIFY_CLIENT_ID
   clientsecret: SPOTIFY_CLIENT_SECRET
+database:
+  type: sqlite
