@@ -8,6 +8,7 @@ import (
 type Configuration struct {
 	Discord discordConfig  `yaml:"discord"`
 	Spotify spotifyConfig  `yaml:"spotify"`
+	Youtube youtubeConfig  `yaml:"youtube"`
 	DB      DatabaseConfig `yaml:"database"`
 }
 
@@ -18,6 +19,9 @@ type spotifyConfig struct {
 
 type discordConfig struct {
 	Token string
+}
+
+type youtubeConfig struct {
 }
 
 // A DatabaseConfig holds the configuration to connect to a database
