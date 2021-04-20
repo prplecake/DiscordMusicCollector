@@ -3,3 +3,6 @@ DiscordMusicCollector
 
 # Ingore secrets
 config.yaml
+
+# Ingore databases
+*.db

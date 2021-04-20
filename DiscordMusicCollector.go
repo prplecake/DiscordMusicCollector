@@ -13,18 +13,23 @@ import (
 	"github.com/zmb3/spotify"
 	"gopkg.in/yaml.v2"
 
+	"git.sr.ht/~mjorgensen/DiscordMusicCollector/dmc"
+	"git.sr.ht/~mjorgensen/DiscordMusicCollector/dmc/db"
 	"git.sr.ht/~mjorgensen/DiscordMusicCollector/services"
 )
 
 // Global variables
 var (
 	Token  string
-	Config Configuration
+	Config dmc.Configuration
 	spc    spotify.Client
+	store  *db.Store
 )
 
 func init() {
 	log.Print("Initializing...")
+
+	// Read configuration
 	configFile := "config.yaml"
 	cf, err := ioutil.ReadFile(configFile)
 	if err != nil {
@@ -35,6 +40,12 @@ func init() {
 		log.Fatal(err)
 	}
 	log.Print(Config)
+
+	// Open database, or connection to one
+	store, err = db.NewStore(Config.DB)
+	if err != nil {
+		log.Panic("error opening database: ", err)
+	}
 
 	services.AuthenticateSpotify(Config.Spotify.ClientID, Config.Spotify.ClientSecret)
 }
@@ -87,9 +98,13 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 		}
 		if strings.Contains(field, "spotify.com") {
-			err := services.HandleSpotifyURL(field)
+			track, err := services.HandleSpotifyURL(field)
 			if err != nil {
 				log.Print("services.HandleSpotifyURL() error: ", err)
+			}
+			err = db.AddTrackToDB(store, track)
+			if err != nil {
+				log.Print("db.AddTracktoDB() error: ", err)
 			}
 		}
 		if strings.Contains(field, "youtube.com") {
@@ -99,7 +114,4 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 		}
 	}
-
 }
-
-func addLinkToDB(link string, service string) {}
