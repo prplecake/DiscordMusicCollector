@@ -1,4 +1,4 @@
-package dcm
+package dmc
 
 import (
 	"regexp"
