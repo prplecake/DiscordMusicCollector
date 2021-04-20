@@ -6,13 +6,18 @@ which can be used for any number of things, including displaying a
 webpage of all music shared in a server, or to automatically build
 playlists.
 
-## Usage
+## Getting Started
+
+Basically you need to clone the repo, create your configuration, and run
+the thing.
 
 ```
 $ git clone https://git.sr.ht/~mjorgensen/DiscordMusicCollector
 $ cd DiscordMusicCollector
+$ cp config.sample.yaml config.yaml
+$ $EDITOR config.yaml
 $ go build DiscordMusicCollector.go
-$ ./DiscordMusicCollector -t YOUR_BOT_TOKEN
+$ ./DiscordMusicCollector
 ```
 
 ## Resources
