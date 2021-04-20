@@ -12,12 +12,12 @@ Basically you need to clone the repo, create your configuration, and run
 the thing.
 
 ```
-$ git clone https://git.sr.ht/~mjorgensen/DiscordMusicCollector
-$ cd DiscordMusicCollector
-$ cp config.sample.yaml config.yaml
-$ $EDITOR config.yaml
-$ go build DiscordMusicCollector.go
-$ ./DiscordMusicCollector
+git clone https://git.sr.ht/~mjorgensen/DiscordMusicCollector
+cd DiscordMusicCollector
+cp config.sample.yaml config.yaml
+$EDITOR config.yaml
+go build DiscordMusicCollector.go
+./DiscordMusicCollector
 ```
 
 ## Resources
