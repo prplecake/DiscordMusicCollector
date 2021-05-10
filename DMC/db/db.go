@@ -6,7 +6,7 @@ import (
 	"log"
 	"strings"
 
-	"git.sr.ht/~mjorgensen/DiscordMusicCollector/dmc"
+	"github.com/prplecake/DiscordMusicCollector/dmc"
 )
 
 // A Store implements storage against a database

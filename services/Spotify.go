@@ -9,7 +9,7 @@ import (
 
 	"github.com/zmb3/spotify"
 
-	"git.sr.ht/~mjorgensen/DiscordMusicCollector/dmc"
+	"github.com/prplecake/DiscordMusicCollector/dmc"
 )
 
 const (

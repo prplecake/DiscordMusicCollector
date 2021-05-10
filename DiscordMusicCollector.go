@@ -13,9 +13,9 @@ import (
 	"github.com/zmb3/spotify"
 	"gopkg.in/yaml.v2"
 
-	"git.sr.ht/~mjorgensen/DiscordMusicCollector/dmc"
-	"git.sr.ht/~mjorgensen/DiscordMusicCollector/dmc/db"
-	"git.sr.ht/~mjorgensen/DiscordMusicCollector/services"
+	"github.com/prplecake/DiscordMusicCollector/dmc"
+	"github.com/prplecake/DiscordMusicCollector/dmc/db"
+	"github.com/prplecake/DiscordMusicCollector/services"
 )
 
 // Global variables

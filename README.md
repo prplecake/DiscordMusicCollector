@@ -12,7 +12,7 @@ Basically you need to clone the repo, create your configuration, and run
 the thing.
 
 ```
-git clone https://git.sr.ht/~mjorgensen/DiscordMusicCollector
+git clone https://github.com/prplecake/DiscordMusicCollector
 cd DiscordMusicCollector
 cp config.sample.yaml config.yaml
 $EDITOR config.yaml

@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"git.sr.ht/~mjorgensen/DiscordMusicCollector/dmc"
+	"github.com/prplecake/DiscordMusicCollector/dmc"
 
 	_ "modernc.org/sqlite" // sqlite driver
 )
