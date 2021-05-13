@@ -26,12 +26,12 @@ func NewSqliteStore(config dmc.DatabaseConfig) (*Store, error) {
 		return nil, err
 	}
 
-	initTableSQL := `CREATE TABLE IF NOT EXISTS tracks (
+	var initTableSQL = `CREATE TABLE IF NOT EXISTS tracks (
 		"id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
 		"title" TEXT,
-		"Artist" TEXT,
-		"Album" TEXT,
-		"Service" TEXT
+		"artist" TEXT,
+		"album" TEXT,
+		"service" TEXT
 	);`
 
 	log.Print("Initializing sqlite database...")
