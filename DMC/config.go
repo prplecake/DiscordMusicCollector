@@ -26,6 +26,6 @@ type youtubeConfig struct {
 
 // A DatabaseConfig holds the configuration to connect to a database
 type DatabaseConfig struct {
-	Username, Password, Hostname, Name, Type string
-	Port                                     int
+	Username, Password, Host, Name, Type, SSLMode string
+	Port                                          int
 }
