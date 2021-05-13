@@ -21,6 +21,10 @@ func NewStore(config dmc.DatabaseConfig) (*Store, error) {
 		Store, err := NewSqliteStore(config)
 		return Store, err
 	}
+	if strings.ToLower(config.Type) == "postgres" {
+		Store, err := NewPostgresStore(config)
+		return Store, err
+	}
 
 	return nil, errors.New("no database")
 }
