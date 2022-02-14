@@ -104,7 +104,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 			err = db.AddTrackToDB(store, track)
 			if err != nil {
-				log.Print("db.AddTracktoDB() error: ", err)
+				log.Print("db.AddTrackToDB() error: ", err)
 			}
 		}
 		if strings.Contains(field, "youtube.com") {
