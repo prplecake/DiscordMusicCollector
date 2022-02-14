@@ -1,8 +1,6 @@
 package dmc
 
-import (
 //"os"
-)
 
 // A Configuration is the main config object.
 type Configuration struct {
