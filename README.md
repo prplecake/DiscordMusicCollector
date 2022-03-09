@@ -1,3 +1,6 @@
+[![Go](https://github.com/prplecake/DiscordMusicCollector/actions/workflows/go.yml/badge.svg)](https://github.com/prplecake/DiscordMusicCollector/actions/workflows/go.yml)
+[![CodeFactor](https://www.codefactor.io/repository/github/prplecake/discordmusiccollector/badge)](https://www.codefactor.io/repository/github/prplecake/discordmusiccollector)
+
 # DiscordMusicCollector
 
 DMC listens in whichever channels you allow it to and watches messages
