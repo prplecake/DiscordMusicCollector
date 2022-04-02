@@ -1,4 +1,4 @@
-package dmc
+package app
 
 import (
 	"regexp"

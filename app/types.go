@@ -1,4 +1,4 @@
-package dmc
+package app
 
 // A Track holds information about a track.
 type Track struct {
