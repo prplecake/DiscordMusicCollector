@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/prplecake/DiscordMusicCollector/dmc"
+	"github.com/prplecake/DiscordMusicCollector/app"
 
 	_ "github.com/lib/pq" // Postgres driver
 )
 
 // NewPostgresStore creates storage against a Postgres database
-func NewPostgresStore(config dmc.DatabaseConfig) (*Store, error) {
+func NewPostgresStore(config app.DatabaseConfig) (*Store, error) {
 	if err := validateConfig(config); err != nil {
 		log.Fatal("database config error: ", err)
 	}
@@ -43,7 +43,7 @@ func NewPostgresStore(config dmc.DatabaseConfig) (*Store, error) {
 	return &Store{conn: db}, nil
 }
 
-func validateConfig(config dmc.DatabaseConfig) error {
+func validateConfig(config app.DatabaseConfig) error {
 	if config.Username == "" {
 		return errors.New("database username not set")
 	}

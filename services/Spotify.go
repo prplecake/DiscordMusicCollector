@@ -9,7 +9,7 @@ import (
 
 	"github.com/zmb3/spotify"
 
-	"github.com/prplecake/DiscordMusicCollector/dmc"
+	"github.com/prplecake/DiscordMusicCollector/app"
 )
 
 const (
@@ -37,24 +37,24 @@ func AuthenticateSpotify(clientID, secretKey string) {
 
 func extractSpotifyTrackID(url string) spotify.ID {
 	re := regexp.MustCompile(spotifyURLRegex)
-	result := dmc.GetParams(re, url)
+	result := app.GetParams(re, url)
 	return spotify.ID(result["trackId"])
 }
 
 // HandleSpotifyURL uses the Spotify API to gather information on a
 // track.
-func HandleSpotifyURL(url string) (dmc.Track, error) {
+func HandleSpotifyURL(url string) (app.Track, error) {
 	log.Print("Handling Spotify URL...")
 
 	sr, err := client.GetTrack(extractSpotifyTrackID(url))
 	if err != nil {
-		return dmc.Track{}, err
+		return app.Track{}, err
 	}
 	artists := []string{}
 	for _, artist := range sr.SimpleTrack.Artists {
 		artists = append(artists, artist.Name)
 	}
-	track := dmc.Track{
+	track := app.Track{
 		Title:   sr.SimpleTrack.Name,
 		Artists: artists,
 		Album:   sr.Album.Name,

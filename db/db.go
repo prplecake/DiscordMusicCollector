@@ -6,7 +6,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/prplecake/DiscordMusicCollector/dmc"
+	"github.com/prplecake/DiscordMusicCollector/app"
 )
 
 // A Store implements storage against a database
@@ -15,7 +15,7 @@ type Store struct {
 }
 
 // NewStore creates a database store
-func NewStore(config dmc.DatabaseConfig) (*Store, error) {
+func NewStore(config app.DatabaseConfig) (*Store, error) {
 	log.Print(config)
 	if strings.ToLower(config.Type) == "sqlite" {
 		Store, err := NewSqliteStore(config)
@@ -30,7 +30,7 @@ func NewStore(config dmc.DatabaseConfig) (*Store, error) {
 }
 
 // AddTrackToDB adds a track to the database
-func AddTrackToDB(db *Store, track dmc.Track) error {
+func AddTrackToDB(db *Store, track app.Track) error {
 	if trackInDB(db, track) {
 		return errors.New("track with service already exists in database")
 	}
@@ -50,7 +50,7 @@ func AddTrackToDB(db *Store, track dmc.Track) error {
 	return nil
 }
 
-func trackInDB(db *Store, track dmc.Track) bool {
+func trackInDB(db *Store, track app.Track) bool {
 	rows, err := db.conn.Query("SELECT COUNT(*) FROM tracks WHERE title = $1 AND service = $2",
 		track.Title, track.Service)
 	if err != nil {
