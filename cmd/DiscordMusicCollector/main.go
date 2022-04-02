@@ -13,15 +13,15 @@ import (
 	"github.com/zmb3/spotify"
 	"gopkg.in/yaml.v2"
 
-	"github.com/prplecake/DiscordMusicCollector/dmc"
-	"github.com/prplecake/DiscordMusicCollector/dmc/db"
+	"github.com/prplecake/DiscordMusicCollector/app"
+	"github.com/prplecake/DiscordMusicCollector/db"
 	"github.com/prplecake/DiscordMusicCollector/services"
 )
 
 // Global variables
 var (
 	Token  string
-	Config dmc.Configuration
+	Config app.Configuration
 	spc    spotify.Client
 	store  *db.Store
 )

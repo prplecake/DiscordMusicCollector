@@ -5,13 +5,13 @@ import (
 	"log"
 	"os"
 
-	"github.com/prplecake/DiscordMusicCollector/dmc"
+	"github.com/prplecake/DiscordMusicCollector/app"
 
 	_ "modernc.org/sqlite" // sqlite driver
 )
 
 // NewSqliteStore opens a SQLite
-func NewSqliteStore(config dmc.DatabaseConfig) (*Store, error) {
+func NewSqliteStore(config app.DatabaseConfig) (*Store, error) {
 	dbf := "DMC.db"
 	if _, err := os.Stat(dbf); os.IsNotExist(err) {
 		dbFile, err := os.Create(dbf)
