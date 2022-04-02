@@ -19,6 +19,6 @@ git clone https://github.com/prplecake/DiscordMusicCollector
 cd DiscordMusicCollector
 cp config.sample.yaml config.yaml
 $EDITOR config.yaml
-go build DiscordMusicCollector.go
+go build cmd/DiscordMusicCollector
 ./DiscordMusicCollector
 ```
