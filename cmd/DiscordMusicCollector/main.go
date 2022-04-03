@@ -30,7 +30,7 @@ func init() {
 	log.Print("Initializing...")
 
 	// Read configuration
-	configFile := "config.yaml"
+	configFile := "cmd/DiscordMusicCollector/config.yaml"
 	cf, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		log.Panic(err)
