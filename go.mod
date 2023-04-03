@@ -3,7 +3,7 @@ module github.com/prplecake/DiscordMusicCollector
 go 1.17
 
 require (
-	github.com/bwmarrin/discordgo v0.24.0
+	github.com/bwmarrin/discordgo v0.27.1
 	github.com/lib/pq v1.10.4
 	github.com/zmb3/spotify v1.3.0
 	golang.org/x/oauth2 v0.0.0-20220223155221-ee480838109b
